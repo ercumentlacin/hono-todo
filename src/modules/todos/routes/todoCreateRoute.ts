@@ -1,7 +1,11 @@
 import { createRoute } from "@hono/zod-openapi";
 import { StatusCodes } from "http-status-codes";
 import { ErrorSchema } from "src/common/schema";
-import { TodoCreateInputSchema, TodoOutputSchema } from "../schema";
+import {
+	TodoCreateInputSchema,
+	TodoCreateOutputSchema,
+	TodoOutputSchema,
+} from "../schema";
 
 export const todoCreateRoute = createRoute({
 	method: "post",
@@ -19,7 +23,7 @@ export const todoCreateRoute = createRoute({
 		[StatusCodes.CREATED]: {
 			content: {
 				"application/json": {
-					schema: TodoOutputSchema,
+					schema: TodoCreateOutputSchema,
 				},
 			},
 			description: "Create a todo",

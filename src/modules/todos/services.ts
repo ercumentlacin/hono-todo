@@ -1,12 +1,12 @@
 import { Db } from "mongodb";
-import { CreateTodoInput } from "./schema";
+import { TodoCreateInput } from "./schema";
 
 export async function createTodo(
-	input: CreateTodoInput,
+	input: TodoCreateInput,
 	db: Db,
 	setStatus: (code: number) => void,
 ) {
-	const todosCollection = db.collection<CreateTodoInput>("todos");
+	const todosCollection = db.collection<TodoCreateInput>("todos");
 	const result = await todosCollection?.insertOne({
 		done: false,
 		title: input.title,

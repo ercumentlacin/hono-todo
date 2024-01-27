@@ -1,4 +1,5 @@
 import { z } from "@hono/zod-openapi";
+import { ObjectId } from "mongodb";
 
 export const TodoCreateInputSchema = z.object({
 	title: z
@@ -15,6 +16,17 @@ export const TodoCreateInputSchema = z.object({
 	}),
 });
 
+export const TodoCreateOutputSchema = TodoCreateInputSchema.merge(
+	z.object({
+		id: z
+			.string()
+			.transform((v) => new ObjectId(v).toHexString())
+			.openapi({
+				example: new ObjectId().toHexString(),
+			}),
+	}),
+);
+
 export const TodoOutputSchema = TodoCreateInputSchema.merge(
 	z.object({
 		id: z.string().openapi({
@@ -25,4 +37,4 @@ export const TodoOutputSchema = TodoCreateInputSchema.merge(
 
 export const TodosOutputSchema = z.array(TodoOutputSchema);
 
-export type CreateTodoInput = z.infer<typeof TodoCreateInputSchema>;
+export type TodoCreateInput = z.infer<typeof TodoCreateInputSchema>;
