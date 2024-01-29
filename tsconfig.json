@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node21/tsconfig.json",
   "compilerOptions": {
+    "strict": true,
     "outDir": "dist",
     "baseUrl": "."
   }

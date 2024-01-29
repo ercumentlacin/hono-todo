@@ -18,23 +18,13 @@ export const TodoCreateInputSchema = z.object({
 
 export const TodoCreateOutputSchema = TodoCreateInputSchema.merge(
 	z.object({
-		id: z
-			.string()
+		_id: z
+			.union([z.string(), z.instanceof(ObjectId)])
 			.transform((v) => new ObjectId(v).toHexString())
 			.openapi({
 				example: new ObjectId().toHexString(),
 			}),
 	}),
 );
-
-export const TodoOutputSchema = TodoCreateInputSchema.merge(
-	z.object({
-		id: z.string().openapi({
-			example: "1212121",
-		}),
-	}),
-);
-
-export const TodosOutputSchema = z.array(TodoOutputSchema);
 
 export type TodoCreateInput = z.infer<typeof TodoCreateInputSchema>;

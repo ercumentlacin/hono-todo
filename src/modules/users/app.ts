@@ -2,10 +2,10 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { StatusCodes } from "http-status-codes";
 import { ErrorSchema } from "src/common/schema";
 import { formatZodErrors } from "src/helpers/formatZodErrors";
-import { todoCreateRoute, todoListRoute } from "./routes";
-import { createTodo, listTodos } from "./services";
+import { userCreateRoute, userListRoute } from "./routes";
+import { createUserService, getUserListService } from "./services";
 
-export const todosApp = new OpenAPIHono({
+export const userApp = new OpenAPIHono({
 	defaultHook: (result, c) => {
 		if (!result.success) {
 			const json = ErrorSchema.parse({
@@ -16,17 +16,17 @@ export const todosApp = new OpenAPIHono({
 	},
 });
 
-todosApp.openapi(todoCreateRoute, async (c) => {
-	const { description, done, title } = c.req.valid("json");
-	const json = await createTodo({ description, done, title });
+userApp.openapi(userCreateRoute, async (c) => {
+	const { username, password, email, todos } = c.req.valid("json");
+	const json = await createUserService({ username, password, email, todos });
 
 	return c.json(json, StatusCodes.CREATED);
 });
-
-todosApp.openapi(todoListRoute, async (c) => {
+userApp.openapi(userListRoute, async (c) => {
 	const q = c.req.valid("query");
 	const limit = parseInt(q.limit, 10);
 	const skip = parseInt(q.skip, 10);
-	const json = await listTodos({ limit, skip });
-	return c.json(json, StatusCodes.OK);
+	const json = await getUserListService({ limit, skip });
+
+	return c.json(json, StatusCodes.CREATED);
 });

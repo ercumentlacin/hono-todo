@@ -15,6 +15,9 @@ const envSchema = z
 		DB_PASS: z.string({
 			required_error: "Missing DB_PASS env var",
 		}),
+		JWT_SECRET: z.string({
+			required_error: "Missing JWT_SECRET env var",
+		}),
 	})
 	.passthrough();
 

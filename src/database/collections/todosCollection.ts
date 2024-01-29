@@ -1,4 +1,4 @@
-import { TodoCreateInput } from "src/modules/todos/schema";
+import { TodoCreateInput } from "src/modules/todos/schemas";
 import { getDatabase } from "..";
 
 export const todosCollection = async () => {

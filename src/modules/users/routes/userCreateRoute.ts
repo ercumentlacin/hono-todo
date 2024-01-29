@@ -1,17 +1,17 @@
 import { createRoute } from "@hono/zod-openapi";
 import { StatusCodes } from "http-status-codes";
 import { ErrorSchema } from "src/common/schema";
-import { TodoCreateInputSchema, TodoCreateOutputSchema } from "../schemas";
+import { UserCreateInputSchema, UserCreateOutputSchema } from "../schemas";
 
-export const todoCreateRoute = createRoute({
+export const userCreateRoute = createRoute({
 	method: "post",
 	path: "/",
-	tags: ["Todos"],
+	tags: ["User"],
 	request: {
 		body: {
 			content: {
 				"application/json": {
-					schema: TodoCreateInputSchema,
+					schema: UserCreateInputSchema,
 				},
 			},
 		},
@@ -20,10 +20,18 @@ export const todoCreateRoute = createRoute({
 		[StatusCodes.CREATED]: {
 			content: {
 				"application/json": {
-					schema: TodoCreateOutputSchema,
+					schema: UserCreateOutputSchema,
 				},
 			},
 			description: "Create a todo",
+		},
+		[StatusCodes.CONFLICT]: {
+			description: "User already exists",
+			content: {
+				"application/json": {
+					schema: ErrorSchema,
+				},
+			},
 		},
 		[StatusCodes.BAD_REQUEST]: {
 			description: "Invalid input",
