@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { HTTPException } from "hono/http-exception";
 import { ApiError } from "./common/ApiError";
 import { ErrorSchema } from "./common/schema";
 import { todosApp } from "./modules/todos/app";
@@ -34,7 +35,13 @@ app.onError((err, c) => {
 	console.log("🚀 ~ app.onError ~ err:", err);
 	if (err instanceof ApiError) {
 		const json = ErrorSchema.parse(err);
-		console.log("🚀 ~ app.onError ~ json:", json);
+		return c.json(json, json.code);
+	}
+	if (err instanceof HTTPException) {
+		const json = ErrorSchema.parse({
+			code: err.status,
+			message: err.message,
+		});
 		return c.json(json, json.code);
 	}
 	return c.json(err, 500);
