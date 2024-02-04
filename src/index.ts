@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import "@total-typescript/ts-reset";
+import { showRoutes } from "hono/dev";
 import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { ApiError } from "./common/ApiError";
@@ -64,3 +65,5 @@ serve({
 	fetch: app.fetch,
 	port,
 });
+
+showRoutes(app);
