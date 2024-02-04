@@ -1,22 +1,18 @@
+import { Prisma } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
-import { ObjectId } from "mongodb";
 import { ApiError } from "src/common/ApiError";
-import { usersCollection } from "src/database/collections/usersCollection";
-import { User } from "../schemas";
+import { prisma } from "src/libs/prisma";
 
 export async function updateUserByIdService({
 	id,
-	input,
-}: { id: string; input: User }) {
-	const collection = await usersCollection();
-	const updatedUser = await collection.findOneAndUpdate(
-		{
-			_id: new ObjectId(id),
+	data,
+}: { id: number; data: Prisma.UserUpdateArgs["data"] }) {
+	const updatedUser = await prisma.user.update({
+		where: {
+			id,
 		},
-		{
-			$set: input,
-		},
-	);
+		data,
+	});
 
 	if (!updatedUser) {
 		throw new ApiError("User not found", StatusCodes.NOT_FOUND);

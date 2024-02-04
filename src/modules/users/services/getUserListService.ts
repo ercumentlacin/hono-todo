@@ -1,11 +1,17 @@
-import { Document, FindOptions } from "mongodb";
-import { usersCollection } from "src/database/collections/usersCollection";
+import { prisma } from "src/libs/prisma";
+import { UserSchema } from "../schemas";
 
-export async function getUserListService(
-	options?: FindOptions<Document> | undefined,
-) {
-	const collection = await usersCollection();
-	const user = await collection.find({}, options).toArray();
+export async function getUserListService(options?: {
+	skip?: number;
+	limit?: number;
+}) {
+	const user = await prisma.user.findMany({
+		include: {
+			todos: true,
+		},
+		skip: options?.skip,
+		take: options?.limit,
+	});
 
-	return user;
+	return UserSchema.omit({ password: true }).array().parse(user);
 }

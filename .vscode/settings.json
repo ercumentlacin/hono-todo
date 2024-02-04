@@ -7,5 +7,16 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "exportall.config.folderListener": [
+    "/src/modules/users/services",
+    "/src/modules/auth/schemas",
+    "/src/modules/auth/routes"
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

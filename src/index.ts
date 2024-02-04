@@ -1,14 +1,20 @@
 import { serve } from "@hono/node-server";
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import "@total-typescript/ts-reset";
 import { HTTPException } from "hono/http-exception";
+import { logger } from "hono/logger";
 import { ApiError } from "./common/ApiError";
 import { ErrorSchema } from "./common/schema";
+import { authApp } from "./modules/auth/app";
 import { todosApp } from "./modules/todos/app";
 import { userApp } from "./modules/users/app";
 
 const app = new OpenAPIHono();
 
+app.use("*", logger());
+
+app.route("api/v1/auth", authApp);
 app.route("api/v1/todos", todosApp);
 app.route("api/v1/users", userApp);
 
@@ -29,6 +35,10 @@ app.doc("/doc", {
 		version: "1.0.0",
 		title: "My API",
 	},
+});
+
+app.notFound((c) => {
+	return c.text("Not Found", 404);
 });
 
 app.onError((err, c) => {

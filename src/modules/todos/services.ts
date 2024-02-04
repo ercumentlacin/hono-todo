@@ -1,24 +1,52 @@
-import { Document, FindOptions } from "mongodb";
-import { todosCollection } from "src/database/collections";
-import {
-	TodoCreateInput,
-	TodoCreateOutputSchema,
-	TodosOutputSchema,
-} from "./schemas";
+import { Prisma } from "@prisma/client";
+import { prisma } from "src/libs/prisma";
+import { TodoCreateOutputSchema, TodosOutputSchema } from "./schemas";
 
-export async function createTodo(input: TodoCreateInput) {
-	const collection = await todosCollection();
-	const result = await collection.insertOne(input);
+export async function createTodo(
+	input: Omit<Prisma.TodoCreateInput, "user">,
+	userId: number,
+) {
+	const newTdo = await prisma.todo.create({
+		data: {
+			...input,
+			user: {
+				connect: {
+					id: userId,
+				},
+			},
+		},
+	});
+
+	await prisma.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
+			todos: {
+				connect: {
+					id: newTdo.id,
+				},
+			},
+		},
+	});
+
+	await prisma.$disconnect();
+
 	const json = TodoCreateOutputSchema.parse({
 		...input,
-		_id: result.insertedId.toHexString(),
+		...newTdo,
 	});
 	return json;
 }
 
-export async function listTodos(options?: FindOptions<Document> | undefined) {
-	const collection = await todosCollection();
-	const result = await collection.find({}, options).toArray();
+export async function listTodos(options?: {
+	skip?: number;
+	limit?: number;
+}) {
+	const result = await prisma.todo.findMany({
+		skip: options?.skip,
+		take: options?.limit,
+	});
 	const json = TodosOutputSchema.parse(result);
 	return json;
 }

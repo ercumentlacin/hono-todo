@@ -3,9 +3,6 @@ import z from "zod";
 
 const envSchema = z
 	.object({
-		MONGODB_URL: z.string({
-			required_error: "Missing MONGODB_URL env var",
-		}),
 		DB_NAME: z.string({
 			required_error: "Missing DB_NAME env var",
 		}),
@@ -17,6 +14,12 @@ const envSchema = z
 		}),
 		JWT_SECRET: z.string({
 			required_error: "Missing JWT_SECRET env var",
+		}),
+		ACCESS_TOKEN_SECRET: z.string({
+			required_error: "Missing ACCESS_TOKEN_SECRET env var",
+		}),
+		REFRESH_TOKEN_SECRET: z.string({
+			required_error: "Missing REFRESH_TOKEN_SECRET env var",
 		}),
 	})
 	.passthrough();

@@ -1,10 +1,17 @@
-import { usersCollection } from "src/database/collections/usersCollection";
-import { UserCreateInput } from "../schemas";
+import { Prisma } from "@prisma/client";
+import { prisma } from "src/libs/prisma";
 
-export async function findUserService(payload: UserCreateInput) {
-	const collection = await usersCollection();
-	const user = await collection.findOne({
-		$or: [{ email: payload.email }, { username: payload.username }],
+type AAAA = Parameters<typeof prisma.user.findFirst>[0];
+
+export async function findUserService(payload: Prisma.UserWhereInput) {
+	const user = await prisma.user.findFirst({
+		where: {
+			OR: [{ email: payload.email }, { username: payload.username }],
+		},
+		include: {
+			todos: true,
+			refreshTokens: true,
+		},
 	});
 
 	return user;
