@@ -19,10 +19,6 @@ app.route("api/v1/auth", authApp);
 app.route("api/v1/todos", todosApp);
 app.route("api/v1/users", userApp);
 
-app.get("/", (c) => {
-	return c.text("Hello Hono!");
-});
-
 app.get(
 	"/ui",
 	swaggerUI({

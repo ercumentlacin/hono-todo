@@ -19,6 +19,5 @@ open http://localhost:3000
 | GET |  /api/v1/users |
 | PUT |  /api/v1/users/:id |
 | GET |  /api/v1/users/:id |
-| GET |  / |
 | GET |  /ui |
 | GET |  /doc |

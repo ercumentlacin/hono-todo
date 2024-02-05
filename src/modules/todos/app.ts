@@ -1,21 +1,18 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { getCookie } from "hono/cookie";
 import { StatusCodes } from "http-status-codes";
+import { defaultHook } from "src/common/defaultHook";
 import { ErrorSchema } from "src/common/schema";
-import { formatZodErrors } from "src/helpers/formatZodErrors";
 import { verifyToken } from "src/helpers/jwt";
-import { todoCreateRoute, todoListRoute } from "./routes";
-import { createTodo, listTodos } from "./services";
+import { todoByIdRoute, todoCreateRoute, todoListRoute } from "./routes";
+import {
+	todoByIdService,
+	todoCreateService,
+	todoListService,
+} from "./services";
 
 export const todosApp = new OpenAPIHono({
-	defaultHook: (result, c) => {
-		if (!result.success) {
-			const json = ErrorSchema.parse({
-				message: formatZodErrors(result),
-			});
-			return c.json(json, json.code);
-		}
-	},
+	defaultHook,
 });
 
 todosApp.openapi(todoCreateRoute, async (c) => {
@@ -42,7 +39,7 @@ todosApp.openapi(todoCreateRoute, async (c) => {
 	}
 
 	const { description, done, title } = c.req.valid("json");
-	const json = await createTodo({ description, done, title }, userId);
+	const json = await todoCreateService({ description, done, title }, userId);
 
 	return c.json(json, StatusCodes.CREATED);
 });
@@ -51,6 +48,15 @@ todosApp.openapi(todoListRoute, async (c) => {
 	const q = c.req.valid("query");
 	const limit = parseInt(q.limit, 10);
 	const skip = parseInt(q.skip, 10);
-	const json = await listTodos({ limit, skip });
+	const json = await todoListService({ limit, skip });
+	return c.json(json, StatusCodes.OK);
+});
+
+todosApp.openapi(todoByIdRoute, async (c) => {
+	const { id } = c.req.valid("param");
+
+	const json = await todoByIdService({
+		id: parseInt(id, 10),
+	});
 	return c.json(json, StatusCodes.OK);
 });

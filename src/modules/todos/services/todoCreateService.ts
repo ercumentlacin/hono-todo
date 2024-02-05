@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "src/libs/prisma";
-import { TodoCreateOutputSchema, TodosOutputSchema } from "./schemas";
+import { TodoCreateOutputSchema } from "../schemas";
 
-export async function createTodo(
+export async function todoCreateService(
 	input: Omit<Prisma.TodoCreateInput, "user">,
 	userId: number,
 ) {
@@ -36,17 +36,5 @@ export async function createTodo(
 		...input,
 		...newTdo,
 	});
-	return json;
-}
-
-export async function listTodos(options?: {
-	skip?: number;
-	limit?: number;
-}) {
-	const result = await prisma.todo.findMany({
-		skip: options?.skip,
-		take: options?.limit,
-	});
-	const json = TodosOutputSchema.parse(result);
 	return json;
 }
