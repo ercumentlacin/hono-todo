@@ -11,7 +11,8 @@
   "exportall.config.folderListener": [
     "/src/modules/users/services",
     "/src/modules/auth/schemas",
-    "/src/modules/auth/routes"
+    "/src/modules/auth/routes",
+    "/src/modules/todos/routes"
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"

@@ -4,11 +4,19 @@ import { StatusCodes } from "http-status-codes";
 import { defaultHook } from "src/common/defaultHook";
 import { ErrorSchema } from "src/common/schema";
 import { verifyToken } from "src/helpers/jwt";
-import { todoByIdRoute, todoCreateRoute, todoListRoute } from "./routes";
+import {
+	todoByIdRoute,
+	todoCreateRoute,
+	todoDeleteByIdRoute,
+	todoListRoute,
+	todoUpdateByIdRoute,
+} from "./routes";
 import {
 	todoByIdService,
 	todoCreateService,
+	todoDeleteByIdService,
 	todoListService,
+	todoUpdateByIdService,
 } from "./services";
 
 export const todosApp = new OpenAPIHono({
@@ -59,4 +67,30 @@ todosApp.openapi(todoByIdRoute, async (c) => {
 		id: parseInt(id, 10),
 	});
 	return c.json(json, StatusCodes.OK);
+});
+
+todosApp.openapi(todoUpdateByIdRoute, async (c) => {
+	const { id } = c.req.valid("param");
+	const data = c.req.valid("json");
+
+	const json = await todoUpdateByIdService({
+		id: parseInt(id, 10),
+		data,
+	});
+	return c.json(json, StatusCodes.OK);
+});
+
+todosApp.openapi(todoDeleteByIdRoute, async (c) => {
+	const { id } = c.req.valid("param");
+
+	await todoDeleteByIdService({
+		id: parseInt(id, 10),
+	});
+
+	return c.json(
+		{
+			success: true as const,
+		},
+		StatusCodes.OK,
+	);
 });
