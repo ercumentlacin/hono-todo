@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { sign, verify } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { ApiError } from "src/common/ApiError";
 import { env } from "src/constants/env";
 import { prisma } from "src/libs/prisma";
@@ -23,9 +23,10 @@ export const verifyToken = async (
 	}
 
 	const tokenToVerify = token.replace("Bearer ", "");
-	const verifyPayload = verify(tokenToVerify, env.JWT_SECRET) as Payload;
+	const verifyPayload = verify(tokenToVerify, env.JWT_SECRET) as JwtPayload;
+	console.log("🚀 ~ verifyPayload:", verifyPayload);
 
-	if (!verifyPayload?.id) {
+	if (!verifyPayload?.userId) {
 		throw new ApiError("Invalid token", StatusCodes.UNAUTHORIZED);
 	}
 

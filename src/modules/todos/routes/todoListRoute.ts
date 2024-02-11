@@ -24,7 +24,7 @@ export const todoListRoute = createRoute({
 					schema: TodosOutputSchema,
 				},
 			},
-			description: "Create a todo",
+			description: "Get all todos",
 		},
 		[StatusCodes.INTERNAL_SERVER_ERROR]: {
 			description: "Invalid input",

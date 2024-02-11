@@ -8,7 +8,11 @@ export async function todoListService(options?: {
 	const result = await prisma.todo.findMany({
 		skip: options?.skip,
 		take: options?.limit,
+		include: {
+			user: true,
+		},
 	});
+
 	const json = TodosOutputSchema.parse(result);
 	return json;
 }

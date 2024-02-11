@@ -31,10 +31,10 @@ todosApp.openapi(todoCreateRoute, async (c) => {
 	if (
 		typeof decodedPayload === "object" &&
 		decodedPayload !== null &&
-		"id" in decodedPayload &&
-		typeof decodedPayload.id === "number"
+		"userId" in decodedPayload &&
+		typeof decodedPayload.userId === "number"
 	) {
-		userId = decodedPayload.id;
+		userId = decodedPayload.userId;
 	}
 
 	if (!userId) {

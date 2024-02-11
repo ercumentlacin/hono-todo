@@ -1,5 +1,18 @@
 import { z } from "@hono/zod-openapi";
 
+const todoFromEnumSchema = z
+	.union([
+		z.enum(["x", "instagram", "medium", "youtube"]),
+		z.string(),
+		z.null(),
+	])
+	.optional()
+	.default(null)
+	.openapi({
+		example: "x",
+		description: "The source of the todo",
+	});
+
 export const TodoCreateInputSchema = z.object({
 	title: z
 		.string({ required_error: "Title is required" })
@@ -16,6 +29,14 @@ export const TodoCreateInputSchema = z.object({
 	user: z.number().optional().openapi({
 		example: 1,
 	}),
+	from: todoFromEnumSchema,
+	tags: z
+		.array(z.string())
+		.optional()
+		.default([])
+		.openapi({
+			example: ["work", "personal"],
+		}),
 });
 
 export const TodoCreateOutputSchema = TodoCreateInputSchema.merge(

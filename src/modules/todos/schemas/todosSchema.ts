@@ -17,8 +17,10 @@ export const TodosOutputSchema = z
 		id: z.number().openapi({
 			example: 1,
 		}),
-		user: z.number().openapi({
-			example: 1,
+		user: z.object({
+			id: z.number(),
+			email: z.string(),
+			username: z.string(),
 		}),
 	})
 	.array();
